@@ -4,4 +4,4 @@ __pycache__
 .hypothesis/
 build/
 reports/
-geth-data
+geth-data/

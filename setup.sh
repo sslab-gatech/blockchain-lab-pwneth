@@ -1,3 +1,13 @@
 #!/usr/bin/env sh
 
-geth init --datadir "./geth-data" ./genesis.json
+ROOT=$(realpath $(dirname "$0"))
+cd $ROOT
+
+which geth &>/dev/null || echo "[!] Install 'geth' first"
+
+DATADIR="$ROOT/geth-data"
+if [ ! -e $DATADIR ]; then
+    geth init --datadir $DATADIR $ROOT/genesis.json
+fi
+
+pip3 install -r $ROOT/requirements.txt
