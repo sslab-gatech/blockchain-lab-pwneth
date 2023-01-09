@@ -15,7 +15,7 @@ from termcolor import colored
 
 from brownie.network.account import Account
 from brownie.network.transaction import TransactionReceipt
-from brownie.network.contract import Contract
+from brownie.network.contract import Contract, ProjectContract
 
 from web3._utils.encoding import hex_encode_abi_type, to_hex
 from web3._utils.normalizers import abi_ens_resolver
@@ -93,9 +93,10 @@ def _to_address(self):
     return self[-20:].hex()
 HexBytes.to_address = _to_address
 
-def _get_storage_at(self, addr):
-    return get_storage_at(self.address, addr)
+def _get_storage_at(self, slot):
+    return get_storage_at(self.address, slot)
 Contract.get_storage_at = _get_storage_at
+ProjectContract.get_storage_at = _get_storage_at
 
 def get_storage_of_array(addr, slot, element=5):
     addr_slot = web3.solidityKeccak(["uint256"], [slot])
@@ -104,6 +105,11 @@ def get_storage_of_array(addr, slot, element=5):
     print("[%s] len=%s" % (addr_slot.hex(), len.int()))
     for offset in range(element):
         print("  [%02d] %s" % (offset, get_storage_at(addr, addr_slot.add(offset)).hex()))
+
+def _get_storage_of_array(self, slot, element=5):
+    return _get_storage_of_array(self.address, slot, element)
+Contract.get_storage_of_array = _get_storage_of_array
+ProjectContract.get_storage_of_array = _get_storage_of_array
 
 #
 # utilities for levels
