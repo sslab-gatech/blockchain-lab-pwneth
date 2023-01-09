@@ -107,7 +107,7 @@ def get_storage_of_array(addr, slot, element=5):
         print("  [%02d] %s" % (offset, get_storage_at(addr, addr_slot.add(offset)).hex()))
 
 def _get_storage_of_array(self, slot, element=5):
-    return _get_storage_of_array(self.address, slot, element)
+    return get_storage_of_array(self.address, slot, element)
 Contract.get_storage_of_array = _get_storage_of_array
 ProjectContract.get_storage_of_array = _get_storage_of_array
 
