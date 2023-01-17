@@ -52,7 +52,7 @@ HexBytes.__repr__ = pp_hexbytes
 get_storage_at = web3.eth.get_storage_at
 get_balance = web3.eth.get_balance
 get_code = web3.eth.get_code
-eth3 = web3.eth
+eth = web3.eth
 
 def encode_with_signature(signature, args):
     selector = web3.sha3(text=signature)[0:4]
@@ -151,11 +151,23 @@ def get_instance_abi(name):
         raise Exception("[!] Failed to find the level: %s" % name)
     return sol[:-4]
 
+@functools.cache
+def get_gamedata_of_level(name):
+    """Get the gamedata of an instance"""
+
+    gamedata = load_gamedata()
+    for c in gamedata["levels"]:
+        if c["slug"] == name:
+            return c
+    raise Exception("[!] Failed to find the level: %s" % name)
+
 def new_level(name):
     """Create a new level instance"""
 
+    level = get_gamedata_of_level(name)
+
     Main = load_main()
-    Main.createLevelInstance(name)
+    Main.createLevelInstance(name, {"value": level.get("deployFunds", 0)})
     return load_level(name)
 
 def load_level(name):
