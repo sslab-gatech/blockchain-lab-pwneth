@@ -16,6 +16,7 @@ from termcolor import colored
 from brownie.network.account import Account
 from brownie.network.transaction import TransactionReceipt
 from brownie.network.contract import Contract, ProjectContract
+from brownie.network import priority_fee
 
 from web3._utils.encoding import hex_encode_abi_type, to_hex
 from web3._utils.normalizers import abi_ens_resolver
@@ -26,6 +27,10 @@ from web3.datastructures import AttributeDict
 
 from eth_typing import HexStr
 from eth_utils import add_0x_prefix, remove_0x_prefix
+
+
+# Set a default gas fee.
+priority_fee("2 gwei")
 
 
 URL = "https://tc.gts3.org/cs8803/2023-spring"
