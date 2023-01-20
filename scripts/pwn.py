@@ -13,6 +13,7 @@ from hexbytes import HexBytes
 from pprint import pprint, pformat
 from termcolor import colored
 
+from brownie.test.managers.runner import RevertContextManager
 from brownie.network.account import Account
 from brownie.network.transaction import TransactionReceipt
 from brownie.network.contract import Contract, ProjectContract
@@ -58,6 +59,9 @@ get_storage_at = web3.eth.get_storage_at
 get_balance = web3.eth.get_balance
 get_code = web3.eth.get_code
 eth = web3.eth
+to_wei = web3.toWei
+web3.to_wei = to_wei
+reverts = RevertContextManager
 
 def encode_with_signature(signature, args):
     selector = web3.sha3(text=signature)[0:4]

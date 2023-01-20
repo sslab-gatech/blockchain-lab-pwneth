@@ -15,14 +15,14 @@ contract Ballot {
         uint vote;   // index of the voted proposal
     }
 
-        struct Proposal {
-            // If you can limit the length to a certain number of bytes,
-            // always use one of bytes1 to bytes32 because they are much cheaper
-            bytes32 name;   // short name (up to 32 bytes)
-            uint voteCount; // number of accumulated votes
-        }
+    struct Proposal {
+        // If you can limit the length to a certain number of bytes,
+        // always use one of bytes1 to bytes32 because they are much cheaper
+        bytes32 name;   // short name (up to 32 bytes)
+        uint voteCount; // number of accumulated votes
+    }
 
-        address public chairperson;
+    address public chairperson;
 
     mapping(address => Voter) public voters;
 
@@ -43,7 +43,7 @@ contract Ballot {
             proposals.push(Proposal({
                     name: proposalNames[i],
                     voteCount: 0
-                    }));
+            }));
         }
     }
 
@@ -52,14 +52,10 @@ contract Ballot {
      * @param voter address of voter
      */
     function giveRightToVote(address voter) public {
-        require(
-                msg.sender == chairperson,
-                "Only chairperson can give right to vote."
-                );
-        require(
-                !voters[voter].voted,
-                "The voter already voted."
-                );
+        require(msg.sender == chairperson,
+                "Only chairperson can give right to vote.");
+        require(!voters[voter].voted,
+                "The voter already voted.");
         require(voters[voter].weight == 0);
         voters[voter].weight = 1;
     }
