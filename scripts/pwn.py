@@ -123,14 +123,14 @@ ProjectContract.get_storage_of_array = _get_storage_of_array
 #
 # utilities for levels
 #
-@functools.cache
+@functools.lru_cache
 def load_abi(name):
     """Load ABI/json of the label instance"""
 
     resp = requests.request("GET", URL + "/assets/abi/%s.json" % name)
     return resp.json()
 
-@functools.cache
+@functools.lru_cache
 def load_main():
     """Load the Main contract"""
 
@@ -140,14 +140,14 @@ def load_main():
     abi = load_abi("Main")
     return Contract.from_abi("Main", addr, abi=abi["abi"])
 
-@functools.cache
+@functools.lru_cache
 def load_gamedata():
     """Fetch the gamedata from the website"""
 
     resp = requests.request("GET", GAMEDATA)
     return resp.json()
 
-@functools.cache
+@functools.lru_cache
 def get_instance_abi(name):
     """Get the name of the instance's ABI"""
 
@@ -160,7 +160,7 @@ def get_instance_abi(name):
         raise Exception("[!] Failed to find the level: %s" % name)
     return sol[:-4]
 
-@functools.cache
+@functools.lru_cache
 def get_gamedata_of_level(name):
     """Get the gamedata of an instance"""
 
