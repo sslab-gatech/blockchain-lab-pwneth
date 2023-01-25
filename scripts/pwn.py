@@ -6,6 +6,7 @@ import functools
 import sys
 import subprocess
 import solcx
+import web3
 
 from brownie import *
 
@@ -40,6 +41,18 @@ if "DEV" in os.environ:
 
 GAMEDATA = URL + "/assets/gamedata.json"
 MAIN = URL + "/assets/abi/Main.json"
+
+# Monkey patch this brownie bug with geth tracing
+# https://github.com/eth-brownie/brownie/pull/1585
+real_make_request = web3.provider.make_request
+def monkey_patched_make_request(method, *args, **kwargs):
+    if method == 'debug_traceTransaction':
+        # Intercept web3.provider.make_request('debug_traceTransaction', (txid, {params},))
+        if len(args) == 1 and type(args[0]) == tuple and len(args[0]) == 2:
+            args[0][1]['enableMemory'] = True
+    return real_make_request(method, *args, **kwargs)
+web3.provider.make_request = monkey_patched_make_request
+
 
 # pprint for borwnie's repl
 def pp_attribute_dict(cls):
