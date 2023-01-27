@@ -32,8 +32,9 @@ from eth_typing import HexStr
 from eth_utils import add_0x_prefix, remove_0x_prefix
 
 
-# Set a default gas fee.
-priority_fee("2 gwei")
+# Set a default gas fee for geth
+if not "Ganache" in web3.clientVersion:
+    priority_fee("2 gwei")
 
 URL = "https://tc.gts3.org/cs8803/2023-spring"
 if "DEV" in os.environ:
