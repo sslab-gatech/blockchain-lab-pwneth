@@ -7,6 +7,7 @@ import sys
 import subprocess
 import solcx
 import web3
+import pyevmasm
 
 from brownie import *
 
@@ -33,7 +34,6 @@ from eth_utils import add_0x_prefix, remove_0x_prefix
 
 # Set a default gas fee.
 priority_fee("2 gwei")
-
 
 URL = "https://tc.gts3.org/cs8803/2023-spring"
 if "DEV" in os.environ:
@@ -228,7 +228,7 @@ def set_default_account():
 def evm_asm(asm):
     """Assemble EVM bytecodes"""
 
-    return pyevmasm.assemble_hex(asm)
+    return HexBytes(pyevmasm.assemble_hex(asm))
 
 def evm_disasm(hexcode):
     """Disassemble EVM hexcode"""
