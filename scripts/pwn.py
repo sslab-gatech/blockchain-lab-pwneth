@@ -8,6 +8,7 @@ import subprocess
 import solcx
 import web3
 import pyevmasm
+import rlp
 
 from brownie import *
 
@@ -279,6 +280,12 @@ def dump_layout(src):
             print("\n%s:" % v["label"])
             _dump(v["members"], types)
 
+def new_contract_address(address, nonce):
+    """Calculate the address of a new contract"""
+
+    addr = web3.keccak(hexstr=rlp.encode([int(address, 16), rlp.encode(nonce)]).hex())[12:]
+    return web3.toChecksumAddress(addr)
+
 def help():
     import inspect
 
@@ -288,7 +295,8 @@ def help():
 
     funcs = [load_abi, load_main, load_gamedata, get_instance_abi,
              new_level, load_level, submit_level, set_default_account,
-             evm_asm, evm_disasm]
+             evm_asm, evm_disasm,
+             dump_layout, new_contract_address]
     for f in funcs:
         print("%25s: %s" % (_get_function_spec(f), f.__doc__))
 
