@@ -281,10 +281,18 @@ def dump_layout(src):
             _dump(v["members"], types)
 
 def new_contract_address(address, nonce):
-    """Calculate the address of a new contract"""
+    """Calculate the address of a new contract (CREATE)"""
 
     addr = web3.keccak(hexstr=rlp.encode([int(address, 16), rlp.encode(nonce)]).hex())[12:]
     return web3.toChecksumAddress(addr)
+
+def new_contract_address2(address, salt, bytecode):
+    """Calculate the address of a new contract (CREATE2)"""
+
+    hash = web3.solidityKeccak(["bytes1", "address", "bytes32", "bytes"],
+                               ["0xff", address, salt, web3.keccak(hexstr=bytecode)])
+    return web3.toChecksumAddress(hash[-20:])
+
 
 def help():
     import inspect
@@ -296,7 +304,7 @@ def help():
     funcs = [load_abi, load_main, load_gamedata, get_instance_abi,
              new_level, load_level, submit_level, set_default_account,
              evm_asm, evm_disasm,
-             dump_layout, new_contract_address]
+             dump_layout, new_contract_address, new_contract_address2]
     for f in funcs:
         print("%25s: %s" % (_get_function_spec(f), f.__doc__))
 
