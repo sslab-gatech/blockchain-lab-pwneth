@@ -234,27 +234,15 @@ def evm_asm(asm):
 
 def evm_disasm(hexcode):
     """Disassemble EVM hexcode"""
-
-    def _discard_swarmhash(hexcode):
-        if '69706673' in hexcode:
-            beg = hexcode.index('69706673')
-            return hexcode[:beg-2]
-        if '627a7a72' in hexcode:
-            beg = hexcode.index('627a7a72')
-            return hexcode[:beg-2]
-        return hexcode
-
+    if type(hexcode) == str:
+        hexcode = HexBytes(hexcode)
     if type(hexcode) == HexBytes:
-        hexcode = hexcode.hex()
-    if hexcode.startswith("0x"):
-        hexcode = hexcode[2:]
+        hexcode = bytes(hexcode)
 
-    hexcode = _discard_swarmhash(hexcode)
-
-    out = subprocess.check_output(["evm", "--input", hexcode, "disasm"],
-                                  universal_newlines=True)
-    # strip the first line
-    return "\n".join(out.splitlines()[1:])
+    return "\n".join(
+        ["{:05x}: {}".format(i.pc, str(i))
+        for i in pyevmasm.disassemble_all(hexcode)]
+    )
 
 def dump_layout(src):
     """Dump the layout of the solidity contract"""
